@@ -15,8 +15,10 @@ int main() {
 
     if (interface.board.get_game_result() == YELLOW) {
         std::cout << "Player 1 wins!" << std::endl;
-    } else {
+    } else if (interface.board.get_game_result() == RED) {
         std::cout << "Player 2 wins!" << std::endl;
+    } else {
+        std::cout << "Draw!" << std::endl;
     }
 
     return 0;
