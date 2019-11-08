@@ -8,11 +8,9 @@
 int main() {
     UI interface = UI(human, bot);
     interface.board.display();
-    std::cout << std::endl;
     while (interface.board.get_game_result() == UNKNOWN) {
         interface.do_turn();
         interface.board.display();
-        std::cout << std::endl;
     }
 
     if (interface.board.get_game_result() == YELLOW) {
