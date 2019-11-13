@@ -21,7 +21,7 @@
 
 
 bitboard get_bot_move(Board &current_board) {
-    search_result result = search(current_board, 7);
+    search_result result = search(current_board);
     return result.best_move;
 }
 

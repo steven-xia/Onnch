@@ -20,7 +20,17 @@
 #include "search.h"
 
 
+unsigned long long get_current_time() {
+    return std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now().time_since_epoch()
+    ).count();
+}
+
+
 int negamax(Board &current_board, const unsigned char depth, const signed char color) {
+    if (get_current_time() > MOVE_END_MILLISECONDS)
+        return 0;
+
     game_const game_state = current_board.get_game_result();
     if (game_state != UNKNOWN) {
         return color * ((game_state == DRAW) ? 0
@@ -40,7 +50,7 @@ int negamax(Board &current_board, const unsigned char depth, const signed char c
     return score;
 }
 
-search_result search(Board &current_board, const unsigned char depth) {
+search_result _search_depth(Board &current_board, unsigned char depth) {
     const signed char search_side = (current_board.side_to_move == YELLOW) ? -1 : 1;
 
     int current_score = -MAX_SCORE;
@@ -62,4 +72,21 @@ search_result search(Board &current_board, const unsigned char depth) {
             best_move
     };
     return return_value;
+}
+
+search_result search(Board &current_board) {
+    MOVE_END_MILLISECONDS = get_current_time() + MOVE_MILLISECONDS - MOVE_OVERHEAD;
+
+    search_result current_result = _search_depth(current_board, 1);
+
+    search_result new_result{};
+    for (unsigned char d = current_board.turn_number + 2; d <= MAX_TURNS; d++) {
+        new_result = _search_depth(current_board, d - current_board.turn_number);
+        if (get_current_time() > MOVE_END_MILLISECONDS)
+            break;
+        else
+            current_result = new_result;
+    }
+
+    return current_result;
 }

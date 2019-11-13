@@ -21,9 +21,13 @@
 #define CONNECT4_SEARCH_H
 
 #include <algorithm>
+#include <chrono>
 #include <climits>
 
 #include "bitboard.h"
+
+#define MOVE_MILLISECONDS 1000
+#define MOVE_OVERHEAD 30
 
 struct search_result {
     int score;
@@ -32,10 +36,16 @@ struct search_result {
 
 constexpr int MAX_SCORE = INT_MAX;
 
+unsigned long long MOVE_END_MILLISECONDS;
+
+
+unsigned long long get_current_time();
 
 int negamax(Board &current_board, unsigned char depth, signed char color);
 
-search_result search(Board &current_board, unsigned char depth);
+search_result _search_depth(Board &current_board, unsigned char depth);
+
+search_result search(Board &current_board);
 
 
 #endif  // CONNECT4_SEARCH_H
