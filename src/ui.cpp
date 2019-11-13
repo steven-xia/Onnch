@@ -26,15 +26,25 @@ bitboard get_bot_move(Board &current_board) {
 }
 
 bitboard get_human_move(const bitboard &legal_moves) {
-    unsigned int user_input;
+    std::string user_input;
+    int input_as_number = 0;
     bitboard possible_move = 0;
     do {
-        std::cout << ">" << std::flush;
-        std::cin >> user_input;
-        if (!(0 < user_input && user_input <= 7))
-            continue;
+        std::cout << "> " << std::flush;
+        std::getline(std::cin, user_input);
 
-        possible_move = COLUMN_ARRAY[user_input - 1] & legal_moves;
+        if (user_input.length() == 0) {
+            std::cout << "Please give an input." << std::endl;
+            continue;
+        }
+
+        input_as_number = (int) user_input.at(0) - (int) '0';
+        if (!(0 < input_as_number && input_as_number <= 7)) {
+            std::cout << "Please give a valid input." << std::endl;
+            continue;
+        }
+
+        possible_move = COLUMN_ARRAY[input_as_number - 1] & legal_moves;
     } while (!possible_move);
 
     return possible_move;

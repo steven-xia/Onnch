@@ -21,6 +21,7 @@
 #define CONNECT4_UI_H
 
 #include <iostream>
+#include <string>
 #include <vector>
 
 #include "bitboard.cpp"
