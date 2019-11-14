@@ -31,5 +31,6 @@
 *.out
 *.app
 
-# Generated debug files.
+# Generated cmake files.
 cmake-build-debug/
+cmake-build-release/
