@@ -77,15 +77,18 @@ search_result _search_depth(Board &current_board, unsigned char depth) {
 search_result search(Board &current_board) {
     MOVE_END_MILLISECONDS = get_current_time() + MOVE_MILLISECONDS - MOVE_OVERHEAD;
 
-    search_result current_result = _search_depth(current_board, 1);
-
-    search_result new_result{};
-    for (unsigned char d = current_board.turn_number + 2; d <= MAX_TURNS; d++) {
-        new_result = _search_depth(current_board, d - current_board.turn_number);
+    search_result current_result{}, new_result{};
+    unsigned short search_depth;
+    for (unsigned char end_turn = current_board.turn_number + 1; end_turn <= MAX_TURNS; end_turn++) {
+        search_depth = end_turn - current_board.turn_number;
+        new_result = _search_depth(current_board, search_depth);
         if (get_current_time() > MOVE_END_MILLISECONDS)
             break;
-        else
-            current_result = new_result;
+        current_result = new_result;
+
+        std::cout << "info";
+        std::cout << " depth " << search_depth;
+        std::cout << std::endl;
     }
 
     return current_result;
