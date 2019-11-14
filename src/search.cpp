@@ -95,6 +95,9 @@ search_result search(Board &current_board) {
         std::cout << " nodes " << searched_nodes;
         std::cout << " score " << current_result.score;
         std::cout << std::endl;
+
+        if (abs(current_result.score) >= MAX_SCORE - MAX_TURNS)
+            break;
     }
 
     return current_result;
