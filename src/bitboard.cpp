@@ -98,16 +98,23 @@ game_const Board::get_game_result() {
     }
 
     // determine whether the side has won.
-    if ((active_pieces & (active_pieces << UP)
-         & (active_pieces << (2 * UP)) & (active_pieces << (3 * UP)))
-        || (active_pieces & (active_pieces << UP_RIGHT)
-            & (active_pieces << (2 * UP_RIGHT)) & (active_pieces << (3 * UP_RIGHT)))
-        || (active_pieces & (active_pieces << RIGHT)
-            & (active_pieces << (2 * RIGHT)) & (active_pieces << (3 * RIGHT)))
-        || (active_pieces & (active_pieces << DOWN_RIGHT)
-            & (active_pieces << (2 * DOWN_RIGHT)) & (active_pieces << (3 * DOWN_RIGHT)))) {
+    bitboard temp_bb;
+
+    temp_bb = active_pieces & (active_pieces << UP);
+    if (temp_bb & (temp_bb << 2 * UP))
         return win_result;
-    }
+
+    temp_bb = active_pieces & (active_pieces << UP_RIGHT);
+    if (temp_bb & (temp_bb << 2 * UP_RIGHT))
+        return win_result;
+
+    temp_bb = active_pieces & (active_pieces << RIGHT);
+    if (temp_bb & (temp_bb << 2 * RIGHT))
+        return win_result;
+
+    temp_bb = active_pieces & (active_pieces << DOWN_RIGHT);
+    if (temp_bb & (temp_bb << 2 * DOWN_RIGHT))
+        return win_result;
 
     // return `DRAW` if game is over.
     if (turn_number == MAX_TURNS)
