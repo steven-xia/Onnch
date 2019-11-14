@@ -51,6 +51,9 @@ int negamax(Board &current_board, const unsigned char depth, const signed char c
 
     int score = -MAX_SCORE;
     for (bitboard &move : current_board.get_legal_moves()) {
+        if (!move)
+            break;
+
         current_board.make_move(move);
         score = std::max(score, -negamax(current_board, depth - 1, -color));
         current_board.undo_move();
@@ -66,6 +69,9 @@ search_result _search_depth(Board &current_board, unsigned char depth) {
     bitboard best_move = 0;
     int child_score;
     for (bitboard &move : current_board.get_legal_moves()) {
+        if (!move)
+            break;
+
         current_board.make_move(move);
         child_score = -negamax(current_board, depth - 1, search_side);
         current_board.undo_move();

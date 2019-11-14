@@ -20,13 +20,14 @@
 #ifndef CONNECT4_BITBOARD_H
 #define CONNECT4_BITBOARD_H
 
-#include <vector>
+#include <array>
 
 //#define bitboard unsigned long long
 typedef unsigned long long bitboard;
 
 enum game_const : unsigned char {
     YELLOW, RED, DRAW, UNKNOWN,
+    BOARD_WIDTH = 7,
     MAX_TURNS = 42,
     BOARD_SIZE = 49
 };
@@ -52,10 +53,10 @@ constexpr bitboard COLUMN_ARRAY[7] = {
 
 
 // split a bitboard into individual bits.
-std::vector<bitboard> split_bitboard(const bitboard &bb);
+std::array<bitboard, BOARD_SIZE> split_bitboard(const bitboard &bb);
 
 // split a bitboard into individual columns.
-std::vector<bitboard> split_bitboard_columns(const bitboard &bb);
+std::array<bitboard, BOARD_WIDTH> split_bitboard_columns(const bitboard &bb);
 
 
 class Board {
@@ -72,8 +73,8 @@ public:
     // get the current game result.
     game_const get_game_result();
 
-    // get a vector of legal moves.
-    std::vector<bitboard> get_legal_moves();
+    // get an array of legal moves.
+    std::array<bitboard, BOARD_WIDTH> get_legal_moves();
 
     // make a new move.
     void make_move(const bitboard &bb);

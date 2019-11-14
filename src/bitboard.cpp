@@ -20,7 +20,7 @@
 #include "bitboard.h"
 
 
-std::vector<bitboard> split_bitboard(const bitboard &bb) {
+std::array<bitboard, BOARD_SIZE> split_bitboard(const bitboard &bb) {
     /*
      * summary: split a bitboard into individual bits.
      *
@@ -31,19 +31,22 @@ std::vector<bitboard> split_bitboard(const bitboard &bb) {
      * vector.
      */
 
-    std::vector<bitboard> bit_list;
+    std::array<bitboard, BOARD_SIZE> bit_list{0};
 
     bitboard possible_bit;
+    unsigned char current_index = 0;
     for (unsigned char s = 0; s < BOARD_SIZE; s++) {
         possible_bit = bb & ((bitboard) 1 << s);
-        if (possible_bit)
-            bit_list.push_back(possible_bit);
+        if (possible_bit) {
+            bit_list[current_index] = possible_bit;
+            current_index++;
+        }
     }
 
     return bit_list;
 }
 
-std::vector<bitboard> split_bitboard_columns(const bitboard &bb) {
+std::array<bitboard, BOARD_WIDTH> split_bitboard_columns(const bitboard &bb) {
     /*
      * summary: split a bitboard into individual columns.
      *
@@ -54,13 +57,16 @@ std::vector<bitboard> split_bitboard_columns(const bitboard &bb) {
      * there is overlap, add the overlap to the return vector.
      */
 
-    std::vector<bitboard> bit_list;
+    std::array<bitboard, BOARD_WIDTH> bit_list{0};
 
     bitboard possible_bit;
+    unsigned char current_index = 0;
     for (bitboard column_bitboard : COLUMN_ARRAY) {
         possible_bit = bb & column_bitboard;
-        if (possible_bit)
-            bit_list.push_back(possible_bit);
+        if (possible_bit) {
+            bit_list[current_index] = possible_bit;
+            current_index++;
+        }
     }
 
     return bit_list;
@@ -111,7 +117,7 @@ game_const Board::get_game_result() {
     return UNKNOWN;
 }
 
-std::vector<bitboard> Board::get_legal_moves() {
+std::array<bitboard, BOARD_WIDTH> Board::get_legal_moves() {
     /*
      * summary: get a vector of legal moves.
      *
