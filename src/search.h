@@ -37,6 +37,7 @@ struct search_result {
 constexpr int MAX_SCORE = INT_MAX;
 
 unsigned long long MOVE_END_MILLISECONDS;
+unsigned long long searched_nodes;
 
 
 unsigned long long get_current_time();

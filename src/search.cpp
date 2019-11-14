@@ -31,6 +31,8 @@ int negamax(Board &current_board, const unsigned char depth, const signed char c
     if (get_current_time() > MOVE_END_MILLISECONDS)
         return 0;
 
+    searched_nodes++;
+
     game_const game_state = current_board.get_game_result();
     if (game_state != UNKNOWN) {
         return color * ((game_state == DRAW) ? 0
@@ -80,6 +82,8 @@ search_result search(Board &current_board) {
     search_result current_result{}, new_result{};
     unsigned short search_depth;
     for (unsigned char end_turn = current_board.turn_number + 1; end_turn <= MAX_TURNS; end_turn++) {
+        searched_nodes = 0;
+
         search_depth = end_turn - current_board.turn_number;
         new_result = _search_depth(current_board, search_depth);
         if (get_current_time() > MOVE_END_MILLISECONDS)
@@ -88,6 +92,7 @@ search_result search(Board &current_board) {
 
         std::cout << "info";
         std::cout << " depth " << search_depth;
+        std::cout << " nodes " << searched_nodes;
         std::cout << std::endl;
     }
 
