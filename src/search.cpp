@@ -93,6 +93,7 @@ search_result search(Board &current_board) {
         std::cout << "info";
         std::cout << " depth " << search_depth;
         std::cout << " nodes " << searched_nodes;
+        std::cout << " score " << current_result.score;
         std::cout << std::endl;
     }
 
