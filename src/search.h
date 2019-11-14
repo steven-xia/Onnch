@@ -42,6 +42,8 @@ unsigned long long searched_nodes;
 
 unsigned long long get_current_time();
 
+unsigned long long get_precise_time();
+
 int negamax(Board &current_board, unsigned char depth, signed char color);
 
 search_result _search_depth(Board &current_board, unsigned char depth);

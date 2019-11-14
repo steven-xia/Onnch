@@ -27,6 +27,13 @@ unsigned long long get_current_time() {
 }
 
 
+unsigned long long get_precise_time() {
+    return std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::high_resolution_clock::now().time_since_epoch()
+    ).count();
+}
+
+
 int negamax(Board &current_board, const unsigned char depth, const signed char color) {
     if (get_current_time() > MOVE_END_MILLISECONDS)
         return 0;
@@ -80,19 +87,23 @@ search_result search(Board &current_board) {
     MOVE_END_MILLISECONDS = get_current_time() + MOVE_MILLISECONDS - MOVE_OVERHEAD;
 
     search_result current_result{}, new_result{};
+    unsigned long long start_time, end_time;
     unsigned short search_depth;
     for (unsigned char end_turn = current_board.turn_number + 1; end_turn <= MAX_TURNS; end_turn++) {
         searched_nodes = 0;
 
+        start_time = get_precise_time();
         search_depth = end_turn - current_board.turn_number;
         new_result = _search_depth(current_board, search_depth);
         if (get_current_time() > MOVE_END_MILLISECONDS)
             break;
         current_result = new_result;
+        end_time = get_precise_time();
 
         std::cout << "info";
         std::cout << " depth " << search_depth;
         std::cout << " nodes " << searched_nodes;
+        std::cout << " nps " << 1000000000 * searched_nodes / (end_time - start_time);
         std::cout << " score " << current_result.score;
         std::cout << std::endl;
 
