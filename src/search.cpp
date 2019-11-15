@@ -42,7 +42,7 @@ search_result negamax(Board &current_board, const unsigned char depth, const sig
         if (current_time > MOVE_END_MILLISECONDS)
             return return_value;
         else
-            time_check_nodes = NPS * (MOVE_END_MILLISECONDS - current_time) / 1000;
+            time_check_nodes += NPS * (MOVE_END_MILLISECONDS - current_time) / 1000;
     }
 
     searched_nodes++;
