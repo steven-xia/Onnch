@@ -29,6 +29,7 @@
 
 #define MOVE_MILLISECONDS 1000
 #define MOVE_OVERHEAD 30
+#define NPS (unsigned long long) 10000000
 
 struct search_result {
     int score;
@@ -39,6 +40,7 @@ constexpr int MAX_SCORE = INT_MAX;
 
 unsigned long long MOVE_END_MILLISECONDS;
 unsigned long long searched_nodes;
+unsigned long long time_check_nodes;
 
 
 unsigned long long get_current_time();

@@ -37,8 +37,13 @@ unsigned long long get_precise_time() {
 search_result negamax(Board &current_board, const unsigned char depth, const signed char color,
                       int alpha = -MAX_SCORE, int beta = MAX_SCORE) {
     search_result return_value{-MAX_SCORE, {0}};
-    if (get_current_time() > MOVE_END_MILLISECONDS)
-        return return_value;
+    if (searched_nodes > time_check_nodes) {
+        unsigned long long current_time = get_current_time();
+        if (current_time > MOVE_END_MILLISECONDS)
+            return return_value;
+        else
+            time_check_nodes = NPS * (MOVE_END_MILLISECONDS - current_time) / 1000;
+    }
 
     searched_nodes++;
 
@@ -82,6 +87,7 @@ search_result search(Board &current_board) {
     const signed char search_side = (current_board.side_to_move == YELLOW) ? 1 : -1;
     unsigned long long turn_start_time = get_current_time();
     MOVE_END_MILLISECONDS = turn_start_time + MOVE_MILLISECONDS - MOVE_OVERHEAD;
+    time_check_nodes = NPS * (MOVE_MILLISECONDS - MOVE_OVERHEAD) / 1000;
 
     search_result current_result{}, new_result{};
     unsigned long long search_start_time, search_end_time;
