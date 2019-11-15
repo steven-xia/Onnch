@@ -73,29 +73,8 @@ search_result negamax(Board &current_board, const unsigned char depth, const sig
     return return_value;
 }
 
-search_result _search_depth(Board &current_board, unsigned char depth) {
-    const signed char search_side = (current_board.side_to_move == YELLOW) ? -1 : 1;
-
-    search_result current_result{-MAX_SCORE, {0}}, child_result{};
-    for (bitboard &move : current_board.get_legal_moves()) {
-        if (!move)
-            break;
-
-        current_board.make_move(move);
-        child_result = negamax(current_board, depth - 1, search_side);
-        current_board.undo_move();
-
-        child_result.score = -child_result.score;
-        if (child_result.score > current_result.score) {
-            current_result = child_result;
-            current_result.pv[depth - 1] = move;
-        }
-    }
-
-    return current_result;
-}
-
 search_result search(Board &current_board) {
+    const signed char search_side = (current_board.side_to_move == YELLOW) ? 1 : -1;
     unsigned long long turn_start_time = get_current_time();
     MOVE_END_MILLISECONDS = turn_start_time + MOVE_MILLISECONDS - MOVE_OVERHEAD;
 
@@ -107,7 +86,7 @@ search_result search(Board &current_board) {
 
         search_start_time = get_precise_time();
         search_depth = end_turn - current_board.turn_number;
-        new_result = _search_depth(current_board, search_depth);
+        new_result = negamax(current_board, search_depth, search_side);
         if (get_current_time() > MOVE_END_MILLISECONDS)
             break;
         current_result = new_result;
