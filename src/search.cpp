@@ -34,59 +34,65 @@ unsigned long long get_precise_time() {
 }
 
 
-int negamax(Board &current_board, const unsigned char depth, const signed char color) {
+search_result negamax(Board &current_board, const unsigned char depth, const signed char color) {
+    search_result return_value{-MAX_SCORE, {0}};
     if (get_current_time() > MOVE_END_MILLISECONDS)
-        return 0;
+        return return_value;
 
     searched_nodes++;
 
     game_const game_state = current_board.get_game_result();
     if (game_state != UNKNOWN) {
-        return color * ((game_state == DRAW) ? 0
-                                             : (game_state == YELLOW) ? MAX_SCORE - current_board.turn_number
-                                                                      : -MAX_SCORE + current_board.turn_number);
+        return_value.score = color * (
+                (game_state == DRAW) ? 0
+                                     : (game_state == YELLOW) ? MAX_SCORE - current_board.turn_number
+                                                              : -MAX_SCORE + current_board.turn_number
+        );
+        return return_value;
     } else if (depth == 0) {
-        return 0;  // replace with evaluation function
+        return_value.score = 0;  // replace with evaluation function
+        return return_value;
     }
 
-    int score = -MAX_SCORE;
+    search_result child_result{};
     for (bitboard &move : current_board.get_legal_moves()) {
         if (!move)
             break;
 
         current_board.make_move(move);
-        score = std::max(score, -negamax(current_board, depth - 1, -color));
+        child_result = negamax(current_board, depth - 1, -color);
         current_board.undo_move();
+
+        child_result.score = -child_result.score;
+        if (child_result.score > return_value.score) {
+            return_value = child_result;
+            return_value.pv[depth - 1] = move;
+        }
     }
 
-    return score;
+    return return_value;
 }
 
 search_result _search_depth(Board &current_board, unsigned char depth) {
     const signed char search_side = (current_board.side_to_move == YELLOW) ? -1 : 1;
 
-    int current_score = -MAX_SCORE;
-    bitboard best_move = 0;
-    int child_score;
+    search_result current_result{-MAX_SCORE, {0}}, child_result{};
     for (bitboard &move : current_board.get_legal_moves()) {
         if (!move)
             break;
 
         current_board.make_move(move);
-        child_score = -negamax(current_board, depth - 1, search_side);
+        child_result = negamax(current_board, depth - 1, search_side);
         current_board.undo_move();
 
-        if (child_score > current_score) {
-            current_score = child_score;
-            best_move = move;
+        child_result.score = -child_result.score;
+        if (child_result.score > current_result.score) {
+            current_result = child_result;
+            current_result.pv[depth - 1] = move;
         }
     }
 
-    search_result return_value{
-            current_score,
-            best_move
-    };
-    return return_value;
+    return current_result;
 }
 
 search_result search(Board &current_board) {
@@ -113,6 +119,16 @@ search_result search(Board &current_board) {
         std::cout << " nodes " << searched_nodes;
         std::cout << " nps " << 1000000000 * searched_nodes / (search_end_time - search_start_time);
         std::cout << " time " << get_current_time() - turn_start_time;
+        std::cout << " pv";
+        for (size_t i = MAX_TURNS; i > 0; i--) {
+            if (current_result.pv[i - 1])
+                for (short s = 0; ; s++) {
+                    if ((current_result.pv[i - 1] >> s) & 1) {
+                        std::cout << " " << (s / 7) + 1;
+                        break;
+                    }
+                }
+        }
         std::cout << std::endl;
 
         if (abs(current_result.score) >= MAX_SCORE - MAX_TURNS)

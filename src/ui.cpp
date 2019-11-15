@@ -22,7 +22,12 @@
 
 bitboard get_bot_move(Board &current_board) {
     search_result result = search(current_board);
-    return result.best_move;
+    for (size_t i = MAX_TURNS; i > 0; i--) {
+        if (result.pv[i - 1])
+            return result.pv[i - 1];
+    }
+
+    return 0;
 }
 
 bitboard get_human_move(const bitboard &legal_moves) {

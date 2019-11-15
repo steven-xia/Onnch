@@ -21,6 +21,7 @@
 #define CONNECT4_SEARCH_H
 
 #include <algorithm>
+#include <array>
 #include <chrono>
 #include <climits>
 
@@ -31,7 +32,7 @@
 
 struct search_result {
     int score;
-    bitboard best_move;
+    std::array<bitboard, MAX_TURNS> pv;
 };
 
 constexpr int MAX_SCORE = INT_MAX;
@@ -44,7 +45,7 @@ unsigned long long get_current_time();
 
 unsigned long long get_precise_time();
 
-int negamax(Board &current_board, unsigned char depth, signed char color);
+search_result negamax(Board &current_board, unsigned char depth, signed char color);
 
 search_result _search_depth(Board &current_board, unsigned char depth);
 
