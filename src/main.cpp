@@ -17,7 +17,6 @@
 */
 
 // todo: create basic evaluation with piece-square tables
-// todo: add alpha-beta pruning to search.
 // todo: add transposition tables to search.
 
 

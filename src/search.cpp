@@ -34,7 +34,8 @@ unsigned long long get_precise_time() {
 }
 
 
-search_result negamax(Board &current_board, const unsigned char depth, const signed char color) {
+search_result negamax(Board &current_board, const unsigned char depth, const signed char color,
+                      int alpha = -MAX_SCORE, int beta = MAX_SCORE) {
     search_result return_value{-MAX_SCORE, {0}};
     if (get_current_time() > MOVE_END_MILLISECONDS)
         return return_value;
@@ -60,13 +61,17 @@ search_result negamax(Board &current_board, const unsigned char depth, const sig
             break;
 
         current_board.make_move(move);
-        child_result = negamax(current_board, depth - 1, -color);
+        child_result = negamax(current_board, depth - 1, -color, -beta, -alpha);
         current_board.undo_move();
 
         child_result.score = -child_result.score;
         if (child_result.score > return_value.score) {
             return_value = child_result;
             return_value.pv[depth - 1] = move;
+
+            alpha = std::max(alpha, return_value.score);
+            if (alpha >= beta)
+                break;
         }
     }
 
@@ -86,7 +91,7 @@ search_result search(Board &current_board) {
 
         search_start_time = get_precise_time();
         search_depth = end_turn - current_board.turn_number;
-        new_result = negamax(current_board, search_depth, search_side);
+        new_result = negamax(current_board, search_depth, search_side, -MAX_SCORE, MAX_SCORE);
         if (get_current_time() > MOVE_END_MILLISECONDS)
             break;
         current_result = new_result;
@@ -101,7 +106,7 @@ search_result search(Board &current_board) {
         std::cout << " pv";
         for (size_t i = MAX_TURNS; i > 0; i--) {
             if (current_result.pv[i - 1])
-                for (short s = 0; ; s++) {
+                for (short s = 0;; s++) {
                     if ((current_result.pv[i - 1] >> s) & 1) {
                         std::cout << " " << (s / 7) + 1;
                         break;
