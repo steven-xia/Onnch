@@ -35,7 +35,7 @@ unsigned long long get_precise_time() {
 
 
 search_result negamax(Board &current_board, const unsigned char depth, const signed char color,
-                      int alpha = -MAX_SCORE, int beta = MAX_SCORE) {
+                      int alpha = -MAX_SCORE, const int &beta = MAX_SCORE) {
     search_result return_value{-MAX_SCORE, {0}};
     if (searched_nodes > time_check_nodes) {
         unsigned long long current_time = get_current_time();
