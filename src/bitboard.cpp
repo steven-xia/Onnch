@@ -61,8 +61,8 @@ std::array<bitboard, BOARD_WIDTH> split_bitboard_columns(const bitboard &bb) {
 
     bitboard possible_bit;
     unsigned char current_index = 0;
-    for (bitboard column_bitboard : COLUMN_ARRAY) {
-        possible_bit = bb & column_bitboard;
+    for (size_t column_index : COLUMN_ORDER) {
+        possible_bit = bb & COLUMN_ARRAY[column_index];
         if (possible_bit) {
             bit_list[current_index] = possible_bit;
             current_index++;

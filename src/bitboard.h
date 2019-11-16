@@ -51,6 +51,10 @@ constexpr bitboard COLUMN_ARRAY[7] = {
         127, 16256, 2080768, 266338304, 34091302912, 4363686772736, 558551906910208
 };
 
+constexpr size_t COLUMN_ORDER[7] = {
+        3, 2, 4, 1, 5, 0, 6
+};
+
 
 // split a bitboard into individual bits.
 std::array<bitboard, BOARD_SIZE> split_bitboard(const bitboard &bb);
