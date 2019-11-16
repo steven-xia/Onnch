@@ -87,13 +87,13 @@ search_result search(Board &current_board) {
     const signed char search_side = (current_board.side_to_move == YELLOW) ? 1 : -1;
     unsigned long long turn_start_time = get_current_time();
     MOVE_END_MILLISECONDS = turn_start_time + MOVE_MILLISECONDS - MOVE_OVERHEAD;
-    time_check_nodes = NPS * (MOVE_MILLISECONDS - MOVE_OVERHEAD) / 1000;
 
     search_result current_result{}, new_result{};
     unsigned long long search_start_time, search_end_time;
     unsigned short search_depth;
     for (unsigned char end_turn = current_board.turn_number + 1; end_turn <= MAX_TURNS; end_turn++) {
         searched_nodes = 0;
+        time_check_nodes = NPS * (MOVE_END_MILLISECONDS - get_current_time()) / 1000;
 
         search_start_time = get_precise_time();
         search_depth = end_turn - current_board.turn_number;

@@ -28,8 +28,8 @@
 #include "bitboard.h"
 
 #define MOVE_MILLISECONDS 1000
-#define MOVE_OVERHEAD 30
-#define NPS (unsigned long long) 10000000
+#define MOVE_OVERHEAD 10
+#define NPS (unsigned long long) 1071428
 
 struct search_result {
     int score;
