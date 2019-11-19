@@ -16,26 +16,50 @@
   along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-// todo: create basic evaluation with piece-square tables
+
+#ifndef CONNECT4_TT_H
+#define CONNECT4_TT_H
+
+#include <random>
+#include <cassert>
+
+#include "bitboard.h"
+
+constexpr unsigned long long MEBIBYTE = 1024 * 1024;
+constexpr int UNFILLED_ENTRY = -724249388;
+
+bitboard ZOBRIST[BOARD_SIZE];
 
 
-#include "ui.cpp"
+void initialize_zobrist();
 
-int main() {
-    UI interface = UI(human, bot);
-    interface.board.display();
-    while (interface.board.get_game_result() == UNKNOWN) {
-        interface.do_turn();
-        interface.board.display();
+
+class TranspositionTable {
+private:
+    size_t tt_size;
+    int *tt;
+
+public:
+    explicit TranspositionTable(const int &size) {
+        tt_size = (MEBIBYTE / sizeof(int)) * size;
+        tt = new int[tt_size];
+
+        initialize_zobrist();
+        clear();
     }
 
-    if (interface.board.get_game_result() == YELLOW) {
-        std::cout << "Player 1 wins!" << std::endl;
-    } else if (interface.board.get_game_result() == RED) {
-        std::cout << "Player 2 wins!" << std::endl;
-    } else {
-        std::cout << "Draw!" << std::endl;
+    ~TranspositionTable() {
+        delete[] tt;
     }
 
-    return 0;
-}
+    int at(const Board &b);
+
+    void clear();
+
+    static bitboard hash(const Board &b);
+
+    void insert(const Board &b, int v);
+};
+
+
+#endif // CONNECT4_TT_H

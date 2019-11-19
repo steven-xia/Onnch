@@ -26,7 +26,9 @@
 #include <climits>
 
 #include "bitboard.h"
+#include "tt.cpp"
 
+#define HASH_MB 64
 #define MOVE_MILLISECONDS 1000
 #define MOVE_OVERHEAD 10
 #define NPS (unsigned long long) 1071428
@@ -41,6 +43,7 @@ constexpr int MAX_SCORE = INT_MAX;
 unsigned long long MOVE_END_MILLISECONDS;
 unsigned long long searched_nodes;
 unsigned long long time_check_nodes;
+auto TT = TranspositionTable(HASH_MB);
 
 
 unsigned long long get_current_time();

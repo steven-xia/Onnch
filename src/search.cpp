@@ -45,6 +45,12 @@ search_result negamax(Board &current_board, const unsigned char depth, const sig
             time_check_nodes += NPS * (MOVE_END_MILLISECONDS - current_time) / 1000;
     }
 
+    int past_result = TT.at(current_board);
+    if (past_result != UNFILLED_ENTRY) {
+        return_value.score = past_result;
+        return return_value;
+    }
+
     searched_nodes++;
 
     game_const game_state = current_board.get_game_result();
@@ -80,6 +86,8 @@ search_result negamax(Board &current_board, const unsigned char depth, const sig
         }
     }
 
+    TT.insert(current_board, return_value.score);
+
     return return_value;
 }
 
@@ -94,6 +102,7 @@ search_result search(Board &current_board) {
     for (unsigned char end_turn = current_board.turn_number + 1; end_turn <= MAX_TURNS; end_turn++) {
         searched_nodes = 0;
         time_check_nodes = NPS * (MOVE_END_MILLISECONDS - get_current_time()) / 1000;
+        TT.clear();
 
         search_start_time = get_precise_time();
         search_depth = end_turn - current_board.turn_number;
