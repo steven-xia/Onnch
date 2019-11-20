@@ -20,15 +20,27 @@
 #ifndef CONNECT4_TT_H
 #define CONNECT4_TT_H
 
-#include <random>
+#include <array>
 #include <cassert>
+#include <random>
 
 #include "bitboard.h"
 
-constexpr unsigned long long MEBIBYTE = 1024 * 1024;
-constexpr int UNFILLED_ENTRY = -724249388;
-
 bitboard ZOBRIST[BOARD_SIZE];
+
+struct tt_entry {
+    int score;
+    std::array<bitboard, MAX_TURNS> pv;
+
+    bitboard hash;
+
+    bool operator==(const tt_entry &x) {
+        return x.score == score && x.pv == pv;
+    }
+};
+
+constexpr unsigned long long MEBIBYTE = 1024 * 1024;
+constexpr tt_entry UNFILLED_ENTRY = tt_entry{0, {0}};
 
 
 void initialize_zobrist();
@@ -38,13 +50,13 @@ class TranspositionTable {
 private:
     size_t entries;
     size_t tt_size;
-    int *tt;
+    tt_entry *tt;
 
 public:
     explicit TranspositionTable(const int &size) {
         entries = 0;
-        tt_size = (MEBIBYTE / sizeof(int)) * size;
-        tt = new int[tt_size];
+        tt_size = (MEBIBYTE / sizeof(tt_entry)) * size;
+        tt = new tt_entry[tt_size];
 
         initialize_zobrist();
         clear();
@@ -54,7 +66,7 @@ public:
         delete[] tt;
     }
 
-    int at(const Board &b);
+    tt_entry at(const Board &b);
 
     void clear();
 
@@ -62,7 +74,7 @@ public:
 
     int hashfull();
 
-    void insert(const Board &b, int v);
+    void insert(const Board &b, int v, std::array<bitboard, MAX_TURNS> pv);
 };
 
 

@@ -30,13 +30,18 @@ void initialize_zobrist() {
 }
 
 
-int TranspositionTable::at(const Board &b) {
-    size_t index = hash(b) % tt_size;
-    return *(tt + index);
+tt_entry TranspositionTable::at(const Board &b) {
+    bitboard hash_key = hash(b);
+    size_t index = hash_key % tt_size;
+    if ((tt + index)->hash == hash_key) {
+        return *(tt + index);
+    } else {
+        return UNFILLED_ENTRY;
+    };
 }
 
 void TranspositionTable::clear() {
-    memset(tt, UNFILLED_ENTRY, sizeof(*tt) * tt_size);
+    std::fill(tt, tt + tt_size, UNFILLED_ENTRY);
     entries = 0;
 }
 
@@ -58,10 +63,11 @@ int TranspositionTable::hashfull() {
     return 1000 * entries / tt_size;
 }
 
-void TranspositionTable::insert(const Board &b, const int v) {
-    size_t index = hash(b) % tt_size;
+void TranspositionTable::insert(const Board &b, const int v, const std::array<bitboard, MAX_TURNS> pv) {
+    bitboard hash_key = hash(b);
+    size_t index = hash_key % tt_size;
     if (*(tt + index) == UNFILLED_ENTRY) {
-        *(tt + index) = v;
+        *(tt + index) = tt_entry{v, pv, hash_key};
         entries++;
     }
 }
