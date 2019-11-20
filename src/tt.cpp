@@ -37,6 +37,7 @@ int TranspositionTable::at(const Board &b) {
 
 void TranspositionTable::clear() {
     memset(tt, UNFILLED_ENTRY, sizeof(*tt) * tt_size);
+    entries = 0;
 }
 
 bitboard TranspositionTable::hash(const Board &b) {
@@ -53,9 +54,14 @@ bitboard TranspositionTable::hash(const Board &b) {
     return hash;
 }
 
+int TranspositionTable::hashfull() {
+    return 1000 * entries / tt_size;
+}
+
 void TranspositionTable::insert(const Board &b, const int v) {
     size_t index = hash(b) % tt_size;
     if (*(tt + index) == UNFILLED_ENTRY) {
         *(tt + index) = v;
+        entries++;
     }
 }

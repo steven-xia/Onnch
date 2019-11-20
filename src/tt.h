@@ -36,11 +36,13 @@ void initialize_zobrist();
 
 class TranspositionTable {
 private:
+    size_t entries;
     size_t tt_size;
     int *tt;
 
 public:
     explicit TranspositionTable(const int &size) {
+        entries = 0;
         tt_size = (MEBIBYTE / sizeof(int)) * size;
         tt = new int[tt_size];
 
@@ -57,6 +59,8 @@ public:
     void clear();
 
     static bitboard hash(const Board &b);
+
+    int hashfull();
 
     void insert(const Board &b, int v);
 };

@@ -117,6 +117,7 @@ search_result search(Board &current_board) {
         std::cout << " score " << current_result.score;
         std::cout << " nodes " << searched_nodes;
         std::cout << " nps " << 1000000000 * searched_nodes / (search_end_time - search_start_time);
+        std::cout << " hashfull " << TT.hashfull();
         std::cout << " time " << get_current_time() - turn_start_time;
         std::cout << " pv";
         for (size_t i = MAX_TURNS; i > 0; i--) {
