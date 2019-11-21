@@ -35,7 +35,7 @@ unsigned long long get_precise_time() {
 
 
 search_result negamax(Board &current_board, const unsigned char depth, const signed char color,
-                      int alpha = -MAX_SCORE, const int &beta = MAX_SCORE) {
+                      const bitboard hash, int alpha = -MAX_SCORE, const int &beta = MAX_SCORE) {
     search_result return_value{-MAX_SCORE, {0}};
     if (searched_nodes > time_check_nodes) {
         unsigned long long current_time = get_current_time();
@@ -45,7 +45,7 @@ search_result negamax(Board &current_board, const unsigned char depth, const sig
             time_check_nodes += NPS * (MOVE_END_MILLISECONDS - current_time) / 1000;
     }
 
-    tt_entry past_result = TT.at(hash_board(current_board));
+    tt_entry past_result = TT.at(hash);
     if (!(past_result == UNFILLED_ENTRY)) {
         return_value.score = past_result.score;
         return_value.pv = past_result.pv;
@@ -73,7 +73,11 @@ search_result negamax(Board &current_board, const unsigned char depth, const sig
             break;
 
         current_board.make_move(move);
-        child_result = negamax(current_board, depth - 1, -color, -beta, -alpha);
+        child_result = negamax(
+                current_board, depth - 1, -color,
+                hash ^ ZOBRIST[BIT_TO_ZOBRIST[(move % 53)]][current_board.side_to_move],
+                -beta, -alpha
+        );
         current_board.undo_move();
 
         child_result.score = -child_result.score;
@@ -87,7 +91,7 @@ search_result negamax(Board &current_board, const unsigned char depth, const sig
         }
     }
 
-    TT.insert(hash_board(current_board), return_value.score, return_value.pv);
+    TT.insert(hash, return_value.score, return_value.pv);
 
     return return_value;
 }
@@ -107,7 +111,9 @@ search_result search(Board &current_board) {
 
         search_start_time = get_precise_time();
         search_depth = end_turn - current_board.turn_number;
-        new_result = negamax(current_board, search_depth, search_side, -MAX_SCORE, MAX_SCORE);
+        new_result = negamax(
+                current_board, search_depth, search_side, hash_board(current_board), -MAX_SCORE, MAX_SCORE
+        );
         if (get_current_time() > MOVE_END_MILLISECONDS)
             break;
         current_result = new_result;

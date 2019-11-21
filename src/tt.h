@@ -28,6 +28,9 @@
 
 bitboard ZOBRIST[BOARD_SIZE][2];
 
+// 53 is the largest prime above 49 (BOARD_SIZE).
+bitboard BIT_TO_ZOBRIST[53];
+
 struct tt_entry {
     int score;
     std::array<bitboard, MAX_TURNS> pv;

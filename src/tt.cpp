@@ -28,6 +28,10 @@ void initialize_zobrist() {
         hash_pair[0] = random_distribution(random_generator);
         hash_pair[1] = random_distribution(random_generator);
     }
+
+    for (unsigned char s = 0; s < BOARD_SIZE; s++) {
+        BIT_TO_ZOBRIST[((bitboard) 1 << s) % 53] = s;
+    }
 }
 
 
