@@ -68,13 +68,13 @@ public:
         delete[] tt;
     }
 
-    tt_entry at(bitboard hash_key);
+    tt_entry at(const bitboard &hash_key);
 
     void clear();
 
     int hashfull();
 
-    void insert(bitboard hash_key, int v);
+    void insert(const bitboard &hash_key, int v);
 };
 
 

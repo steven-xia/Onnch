@@ -50,7 +50,7 @@ unsigned long long get_current_time();
 
 unsigned long long get_precise_time();
 
-search_result negamax(Board &current_board, unsigned char depth, signed char color, bitboard hash,
+search_result negamax(Board &current_board, const unsigned char &depth, const signed char &color, const bitboard &hash,
                       int alpha, const int &beta);
 
 search_result search(Board &current_board);

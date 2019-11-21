@@ -35,7 +35,7 @@ void initialize_zobrist() {
 }
 
 
-tt_entry TranspositionTable::at(const bitboard hash_key) {
+tt_entry TranspositionTable::at(const bitboard &hash_key) {
     size_t index = hash_key % tt_size;
     if ((tt + index)->hash == hash_key) {
         return *(tt + index);
@@ -53,7 +53,7 @@ int TranspositionTable::hashfull() {
     return 1000 * entries / tt_size;
 }
 
-void TranspositionTable::insert(const bitboard hash_key, const int v) {
+void TranspositionTable::insert(const bitboard &hash_key, const int v) {
     size_t index = hash_key % tt_size;
     if (*(tt + index) == UNFILLED_ENTRY) {
         *(tt + index) = tt_entry{v, hash_key};
