@@ -2,12 +2,12 @@
   Onnch, a Connect 4 bot specializing in short time control games.
   Copyright (C) 2019  Steven Xia
 
-  This program is free software: you can redistribute it and/or modify
+  Onnch is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, either version 3 of the License, or
   (at your option) any later version.
 
-  This program is distributed in the hope that it will be useful,
+  Onnch is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
@@ -40,6 +40,14 @@ bitboard get_human_move(const bitboard &legal_moves) {
 
         if (user_input.length() == 0) {
             std::cout << "Please give an input." << std::endl;
+            continue;
+        }
+
+        if (user_input == "show w") {
+            std::cout << LICENSE_W << std::endl;
+            continue;
+        } else if (user_input == "show c") {
+            std::cout << LICENSE_C << std::endl;
             continue;
         }
 
