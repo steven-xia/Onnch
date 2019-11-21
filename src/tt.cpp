@@ -24,14 +24,14 @@ void initialize_zobrist() {
     std::default_random_engine random_generator(0);
     std::uniform_int_distribution<bitboard> random_distribution(1, ULLONG_MAX);
 
-    for (unsigned long long &hash : ZOBRIST) {
-        hash = random_distribution(random_generator);
+    for (bitboard * hash_pair : ZOBRIST) {
+        hash_pair[0] = random_distribution(random_generator);
+        hash_pair[1] = random_distribution(random_generator);
     }
 }
 
 
-tt_entry TranspositionTable::at(const Board &b) {
-    bitboard hash_key = hash(b);
+tt_entry TranspositionTable::at(const bitboard hash_key) {
     size_t index = hash_key % tt_size;
     if ((tt + index)->hash == hash_key) {
         return *(tt + index);
@@ -45,29 +45,28 @@ void TranspositionTable::clear() {
     entries = 0;
 }
 
-bitboard TranspositionTable::hash(const Board &b) {
-    bitboard all_pieces = EMPTY_BOARD | b.yellow_bitboard | b.red_bitboard;
-    all_pieces = ((all_pieces << UP) & (~all_pieces)) | b.yellow_bitboard;
-
-    bitboard hash = 0;
-    for (unsigned char position = 0; position < BOARD_SIZE; position++) {
-        if ((all_pieces >> position) & 1) {
-            hash ^= ZOBRIST[position];
-        }
-    }
-
-    return hash;
-}
-
 int TranspositionTable::hashfull() {
     return 1000 * entries / tt_size;
 }
 
-void TranspositionTable::insert(const Board &b, const int v, const std::array<bitboard, MAX_TURNS> pv) {
-    bitboard hash_key = hash(b);
+void TranspositionTable::insert(const bitboard hash_key, const int v, const std::array<bitboard, MAX_TURNS> pv) {
     size_t index = hash_key % tt_size;
     if (*(tt + index) == UNFILLED_ENTRY) {
         *(tt + index) = tt_entry{v, pv, hash_key};
         entries++;
     }
+}
+
+bitboard hash_board(const Board &b) {
+    bitboard hash = 0;
+
+    for (unsigned char position = 0; position < BOARD_SIZE; position++) {
+        if ((b.yellow_bitboard >> position) & 1) {
+            hash ^= ZOBRIST[position][0];
+        } else if ((b.red_bitboard >> position) & 1) {
+            hash ^= ZOBRIST[position][1];
+        }
+    }
+
+    return hash;
 }

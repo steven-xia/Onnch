@@ -45,7 +45,7 @@ search_result negamax(Board &current_board, const unsigned char depth, const sig
             time_check_nodes += NPS * (MOVE_END_MILLISECONDS - current_time) / 1000;
     }
 
-    tt_entry past_result = TT.at(current_board);
+    tt_entry past_result = TT.at(hash_board(current_board));
     if (!(past_result == UNFILLED_ENTRY)) {
         return_value.score = past_result.score;
         return_value.pv = past_result.pv;
@@ -87,7 +87,7 @@ search_result negamax(Board &current_board, const unsigned char depth, const sig
         }
     }
 
-    TT.insert(current_board, return_value.score, return_value.pv);
+    TT.insert(hash_board(current_board), return_value.score, return_value.pv);
 
     return return_value;
 }

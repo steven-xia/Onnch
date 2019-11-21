@@ -26,7 +26,7 @@
 
 #include "bitboard.h"
 
-bitboard ZOBRIST[BOARD_SIZE];
+bitboard ZOBRIST[BOARD_SIZE][2];
 
 struct tt_entry {
     int score;
@@ -44,6 +44,7 @@ constexpr tt_entry UNFILLED_ENTRY = tt_entry{0, {0}};
 
 
 void initialize_zobrist();
+bitboard hash_board(const Board &b);
 
 
 class TranspositionTable {
@@ -66,15 +67,13 @@ public:
         delete[] tt;
     }
 
-    tt_entry at(const Board &b);
+    tt_entry at(bitboard hash_key);
 
     void clear();
 
-    static bitboard hash(const Board &b);
-
     int hashfull();
 
-    void insert(const Board &b, int v, std::array<bitboard, MAX_TURNS> pv);
+    void insert(bitboard hash_key, int v, std::array<bitboard, MAX_TURNS> pv);
 };
 
 
