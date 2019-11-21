@@ -36,12 +36,12 @@ struct tt_entry {
     bitboard hash;
 
     bool operator==(const tt_entry &x) {
-        return x.score == score;
+        return x.hash == hash;
     }
 };
 
 constexpr unsigned long long MEBIBYTE = 1024 * 1024;
-constexpr tt_entry UNFILLED_ENTRY = tt_entry{0};
+constexpr tt_entry UNFILLED_ENTRY = tt_entry{0, 1};
 
 
 void initialize_zobrist();
