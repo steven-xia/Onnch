@@ -48,7 +48,6 @@ search_result negamax(Board &current_board, const unsigned char depth, const sig
     tt_entry past_result = TT.at(hash);
     if (!(past_result == UNFILLED_ENTRY)) {
         return_value.score = past_result.score;
-        return_value.pv = past_result.pv;
         return return_value;
     }
 
@@ -91,7 +90,7 @@ search_result negamax(Board &current_board, const unsigned char depth, const sig
         }
     }
 
-    TT.insert(hash, return_value.score, return_value.pv);
+    TT.insert(hash, return_value.score);
 
     return return_value;
 }

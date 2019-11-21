@@ -33,17 +33,15 @@ bitboard BIT_TO_ZOBRIST[53];
 
 struct tt_entry {
     int score;
-    std::array<bitboard, MAX_TURNS> pv;
-
     bitboard hash;
 
     bool operator==(const tt_entry &x) {
-        return x.score == score && x.pv == pv;
+        return x.score == score;
     }
 };
 
 constexpr unsigned long long MEBIBYTE = 1024 * 1024;
-constexpr tt_entry UNFILLED_ENTRY = tt_entry{0, {0}};
+constexpr tt_entry UNFILLED_ENTRY = tt_entry{0};
 
 
 void initialize_zobrist();
@@ -76,7 +74,7 @@ public:
 
     int hashfull();
 
-    void insert(bitboard hash_key, int v, std::array<bitboard, MAX_TURNS> pv);
+    void insert(bitboard hash_key, int v);
 };
 
 
