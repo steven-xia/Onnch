@@ -116,7 +116,7 @@ search_result search(Board &current_board) {
         search_start_time = get_precise_time();
         search_depth = end_turn - current_board.turn_number;
         new_result = negamax(
-                current_board, search_depth, search_side, hash_board(current_board), -MAX_SCORE, MAX_SCORE
+                current_board, search_depth + 1, search_side, hash_board(current_board), -MAX_SCORE, MAX_SCORE
         );
         if (get_current_time() > MOVE_END_MILLISECONDS)
             break;
