@@ -58,6 +58,8 @@ void TranspositionTable::insert(const bitboard &hash_key, const int v, const uns
     if (*(tt + index) == UNFILLED_ENTRY) {
         *(tt + index) = tt_entry{hash_key, v, d};
         entries++;
+    } else if ((tt + index)->depth < d) {
+        *(tt + index) = tt_entry{hash_key, v, d};
     }
 }
 
