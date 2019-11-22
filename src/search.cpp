@@ -77,7 +77,7 @@ search_result negamax(Board &current_board, const unsigned char &depth, const si
                 hash ^ ZOBRIST[BIT_TO_ZOBRIST[(move % 53)]][current_board.side_to_move],
                 -beta, -alpha
         );
-        current_board.undo_move();
+        current_board.undo_move(move);
 
         child_result.score = -child_result.score;
         if (child_result.score > return_value.score) {

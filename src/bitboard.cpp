@@ -157,11 +157,10 @@ void Board::make_move(const bitboard &bb) {
         side_to_move = YELLOW;
     }
 
-    past_moves[turn_number] = bb;
     turn_number++;
 }
 
-void Board::undo_move() {
+void Board::undo_move(const bitboard &bb) {
     /*
      * summary: undo the last move.
      *
@@ -174,10 +173,10 @@ void Board::undo_move() {
     turn_number--;
 
     if (side_to_move == YELLOW) {
-        red_bitboard ^= past_moves[turn_number];
+        red_bitboard ^= bb;
         side_to_move = RED;
     } else {
-        yellow_bitboard ^= past_moves[turn_number];
+        yellow_bitboard ^= bb;
         side_to_move = YELLOW;
     }
 }

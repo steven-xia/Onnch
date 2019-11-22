@@ -69,7 +69,6 @@ public:
     bitboard yellow_bitboard = 0;
     game_const side_to_move = YELLOW;
     unsigned char turn_number = 0;
-    bitboard past_moves[MAX_TURNS] = {0};
 
     // initialise an empty board object.
     Board() = default;
@@ -84,7 +83,7 @@ public:
     void make_move(const bitboard &bb);
 
     // undo the last move.
-    void undo_move();
+    void undo_move(const bitboard &bb);
 
     // display the current board.
     void display();
