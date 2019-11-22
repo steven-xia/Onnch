@@ -128,7 +128,7 @@ std::array<bitboard, BOARD_WIDTH> Board::get_legal_moves() {
     /*
      * summary: get a vector of legal moves.
      *
-     * return: a vector of all the legal move bits as bitboards.
+     * return: an array of all the legal move bits as bitboards.
      *
      * implementation: finds the bitboard of all legal moves and splits it by
      * the columns (there is only one move per column).
@@ -146,7 +146,7 @@ void Board::make_move(const bitboard &bb) {
      *
      * implementation: first determines which side to move, then adds the move
      * bitboard to the side's bitboard and change the side to move. then,
-     * add the move to the array of past moves and increment the move number.
+     * increment the move number.
      */
 
     if (side_to_move == YELLOW) {
