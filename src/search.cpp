@@ -46,7 +46,7 @@ search_result negamax(Board &current_board, const unsigned char &depth, const si
     }
 
     tt_entry past_result = TT.at(hash);
-    if (!(past_result == UNFILLED_ENTRY)) {
+    if (abs(past_result.score) > MAX_SCORE - MAX_TURNS || past_result.depth >= depth) {
         return_value.score = past_result.score;
         return return_value;
     }
@@ -90,7 +90,7 @@ search_result negamax(Board &current_board, const unsigned char &depth, const si
         }
     }
 
-    TT.insert(hash, return_value.score);
+    TT.insert(hash, return_value.score, depth);
 
     return return_value;
 }
@@ -99,6 +99,7 @@ search_result search(Board &current_board) {
     const signed char search_side = (current_board.side_to_move == YELLOW) ? 1 : -1;
     unsigned long long turn_start_time = get_current_time();
     MOVE_END_MILLISECONDS = turn_start_time + MOVE_MILLISECONDS - MOVE_OVERHEAD;
+    TT.clear();
 
     search_result current_result{}, new_result{};
     unsigned long long search_start_time, search_end_time;
@@ -106,7 +107,6 @@ search_result search(Board &current_board) {
     for (unsigned char end_turn = current_board.turn_number + 1; end_turn <= MAX_TURNS; end_turn++) {
         searched_nodes = 0;
         time_check_nodes = NPS * (MOVE_END_MILLISECONDS - get_current_time()) / 1000;
-        TT.clear();
 
         search_start_time = get_precise_time();
         search_depth = end_turn - current_board.turn_number;

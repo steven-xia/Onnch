@@ -53,10 +53,10 @@ int TranspositionTable::hashfull() {
     return 1000 * entries / tt_size;
 }
 
-void TranspositionTable::insert(const bitboard &hash_key, const int v) {
+void TranspositionTable::insert(const bitboard &hash_key, const int v, const unsigned char d) {
     size_t index = hash_key % tt_size;
     if (*(tt + index) == UNFILLED_ENTRY) {
-        *(tt + index) = tt_entry{v, hash_key};
+        *(tt + index) = tt_entry{hash_key, v, d};
         entries++;
     }
 }

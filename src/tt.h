@@ -32,8 +32,10 @@ bitboard ZOBRIST[BOARD_SIZE][2];
 bitboard BIT_TO_ZOBRIST[53];
 
 struct tt_entry {
-    int score;
     bitboard hash;
+
+    int score;
+    unsigned char depth;
 
     bool operator==(const tt_entry &x) {
         return x.hash == hash;
@@ -41,7 +43,7 @@ struct tt_entry {
 };
 
 constexpr unsigned long long MEBIBYTE = 1024 * 1024;
-constexpr tt_entry UNFILLED_ENTRY = tt_entry{0, 1};
+constexpr tt_entry UNFILLED_ENTRY = tt_entry{1, 0, 0};
 
 
 void initialize_zobrist();
@@ -74,7 +76,7 @@ public:
 
     int hashfull();
 
-    void insert(const bitboard &hash_key, int v);
+    void insert(const bitboard &hash_key, int v, unsigned char d);
 };
 
 
