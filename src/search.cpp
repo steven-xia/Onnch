@@ -45,7 +45,7 @@ search_result negamax(Board &current_board, const unsigned char &depth, const si
             time_check_nodes += NPS * (MOVE_END_MILLISECONDS - current_time) / 1000;
     }
 
-    tt_entry past_result = TT.at(hash);
+    const tt_entry past_result = TT.at(hash);
     if (abs(past_result.score) > MAX_SCORE - MAX_TURNS || past_result.depth >= depth) {
         return_value.score = past_result.score;
         return return_value;
@@ -53,7 +53,7 @@ search_result negamax(Board &current_board, const unsigned char &depth, const si
 
     searched_nodes++;
 
-    game_const game_state = current_board.get_game_result();
+    const game_const game_state = current_board.get_game_result();
     if (game_state != UNKNOWN) {
         return_value.score = color * (
                 (game_state == DRAW) ? 0
@@ -66,7 +66,7 @@ search_result negamax(Board &current_board, const unsigned char &depth, const si
         return return_value;
     }
 
-    bitboard legal_moves = current_board.get_legal_moves();
+    const bitboard legal_moves = current_board.get_legal_moves();
 
     search_result child_result{};
     bitboard move;
@@ -102,7 +102,7 @@ search_result negamax(Board &current_board, const unsigned char &depth, const si
 
 search_result search(Board &current_board) {
     const signed char search_side = (current_board.side_to_move == YELLOW) ? 1 : -1;
-    unsigned long long turn_start_time = get_current_time();
+    const unsigned long long turn_start_time = get_current_time();
     MOVE_END_MILLISECONDS = turn_start_time + MOVE_MILLISECONDS - MOVE_OVERHEAD;
     TT.clear();
 
