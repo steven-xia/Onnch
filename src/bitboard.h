@@ -77,7 +77,7 @@ public:
     game_const get_game_result();
 
     // get an array of legal moves.
-    std::array<bitboard, BOARD_WIDTH> get_legal_moves();
+    bitboard get_legal_moves();
 
     // make a new move.
     void make_move(const bitboard &bb);

@@ -68,11 +68,8 @@ void UI::do_turn() {
     player current_player = (board.turn_number % 2 == 0) ? player1 : player2;
 
     bitboard player_move;
-    bitboard legal_moves_bitboard = 0;
     if (current_player == human) {
-        for (auto bit : board.get_legal_moves())
-            legal_moves_bitboard |= bit;
-        player_move = get_human_move(legal_moves_bitboard);
+        player_move = get_human_move(board.get_legal_moves());
     } else {
         player_move = get_bot_move(board);
     }

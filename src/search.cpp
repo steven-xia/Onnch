@@ -66,10 +66,15 @@ search_result negamax(Board &current_board, const unsigned char &depth, const si
         return return_value;
     }
 
+    bitboard legal_moves = current_board.get_legal_moves();
+
     search_result child_result{};
-    for (bitboard &move : current_board.get_legal_moves()) {
+    bitboard move;
+    for (const bitboard &column_index : COLUMN_ORDER) {
+        move = legal_moves & COLUMN_ARRAY[column_index];
+
         if (!move)
-            break;
+            continue;
 
         current_board.make_move(move);
         child_result = negamax(

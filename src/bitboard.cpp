@@ -124,18 +124,17 @@ game_const Board::get_game_result() {
     return UNKNOWN;
 }
 
-std::array<bitboard, BOARD_WIDTH> Board::get_legal_moves() {
+bitboard Board::get_legal_moves() {
     /*
-     * summary: get a vector of legal moves.
+     * summary: get a bitboard of legal moves.
      *
-     * return: an array of all the legal move bits as bitboards.
+     * return: a bitboard of all the legal moves at this position.
      *
-     * implementation: finds the bitboard of all legal moves and splits it by
-     * the columns (there is only one move per column).
+     * implementation: finds the bitboard of all legal moves.
      */
 
     bitboard all_pieces = EMPTY_BOARD | yellow_bitboard | red_bitboard;
-    return split_bitboard_columns((all_pieces << UP) & (~all_pieces));
+    return (all_pieces << UP) & (~all_pieces);
 }
 
 void Board::make_move(const bitboard &bb) {
