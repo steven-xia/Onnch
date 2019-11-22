@@ -150,10 +150,10 @@ void Board::make_move(const bitboard &bb) {
      */
 
     if (side_to_move == YELLOW) {
-        yellow_bitboard += bb;
+        yellow_bitboard ^= bb;
         side_to_move = RED;
     } else {
-        red_bitboard += bb;
+        red_bitboard ^= bb;
         side_to_move = YELLOW;
     }
 
@@ -174,10 +174,10 @@ void Board::undo_move() {
     turn_number--;
 
     if (side_to_move == YELLOW) {
-        red_bitboard -= past_moves[turn_number];
+        red_bitboard ^= past_moves[turn_number];
         side_to_move = RED;
     } else {
-        yellow_bitboard -= past_moves[turn_number];
+        yellow_bitboard ^= past_moves[turn_number];
         side_to_move = YELLOW;
     }
 }
