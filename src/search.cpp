@@ -45,13 +45,13 @@ search_result negamax(Board &current_board, const unsigned char &depth, const si
             time_check_nodes += NPS * (MOVE_END_MILLISECONDS - current_time) / 1000;
     }
 
+    searched_nodes++;
+
     const tt_entry past_result = TT.at(hash);
     if (abs(past_result.score) > MAX_SCORE - MAX_TURNS || past_result.depth >= depth) {
         return_value.score = past_result.score;
         return return_value;
     }
-
-    searched_nodes++;
 
     const game_const game_state = current_board.get_game_result();
     if (game_state != UNKNOWN) {

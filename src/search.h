@@ -31,7 +31,7 @@
 #define HASH_MB 64
 #define MOVE_MILLISECONDS 1000
 #define MOVE_OVERHEAD 10
-#define NPS (unsigned long long) 117647
+#define NPS (unsigned long long) 1034482
 
 struct search_result {
     int score;
