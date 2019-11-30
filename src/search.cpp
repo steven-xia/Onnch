@@ -79,7 +79,7 @@ search_result negamax(Board &current_board, const unsigned char &depth, const si
         current_board.make_move(move);
         child_result = negamax(
                 current_board, depth - 1, -color,
-                hash ^ ZOBRIST[BIT_TO_ZOBRIST[(move % 53)]][current_board.side_to_move],
+                hash ^ ZOBRIST[BIT_TO_ZOBRIST[(move % 53)]][current_board.turn_number % 2],
                 -beta, -alpha
         );
         current_board.undo_move(move);
@@ -101,7 +101,7 @@ search_result negamax(Board &current_board, const unsigned char &depth, const si
 }
 
 search_result search(Board &current_board) {
-    const signed char search_side = (current_board.side_to_move == YELLOW) ? 1 : -1;
+    const signed char search_side = (current_board.turn_number % 2 == 0) ? -1 : 1;
     const unsigned long long turn_start_time = get_current_time();
     MOVE_END_MILLISECONDS = turn_start_time + MOVE_MILLISECONDS - MOVE_OVERHEAD;
     TT.clear();

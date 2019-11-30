@@ -24,7 +24,7 @@ void initialize_zobrist() {
     std::default_random_engine random_generator(0);
     std::uniform_int_distribution<bitboard> random_distribution(1, ULLONG_MAX);
 
-    for (bitboard * hash_pair : ZOBRIST) {
+    for (bitboard *hash_pair : ZOBRIST) {
         hash_pair[0] = random_distribution(random_generator);
         hash_pair[1] = random_distribution(random_generator);
     }
@@ -66,10 +66,14 @@ void TranspositionTable::insert(const bitboard &hash_key, const int v, const uns
 bitboard hash_board(const Board &b) {
     bitboard hash = 0;
 
+    const bitboard yellow_bitboard = b.turn_number % 2 == 0 ? b.current_bitboard
+                                                            : b.entire_bitboard ^ b.current_bitboard;
+    const bitboard red_bitboard = b.turn_number % 2 == 1 ? b.current_bitboard
+                                                         : b.entire_bitboard ^ b.current_bitboard;
     for (unsigned char position = 0; position < BOARD_SIZE; position++) {
-        if ((b.yellow_bitboard >> position) & 1) {
+        if ((yellow_bitboard >> position) & 1) {
             hash ^= ZOBRIST[position][0];
-        } else if ((b.red_bitboard >> position) & 1) {
+        } else if ((red_bitboard >> position) & 1) {
             hash ^= ZOBRIST[position][1];
         }
     }

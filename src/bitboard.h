@@ -65,9 +65,8 @@ std::array<bitboard, BOARD_WIDTH> split_bitboard_columns(const bitboard &bb);
 
 class Board {
 public:
-    bitboard red_bitboard = 0;
-    bitboard yellow_bitboard = 0;
-    game_const side_to_move = YELLOW;
+    bitboard current_bitboard = 0;
+    bitboard entire_bitboard = 0;
     unsigned char turn_number = 0;
 
     // initialise an empty board object.

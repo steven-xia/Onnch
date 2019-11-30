@@ -87,32 +87,25 @@ game_const Board::get_game_result() {
      */
 
     // determine the side to check for a win.
-    game_const win_result;
-    bitboard active_pieces;
-    if (side_to_move == YELLOW) {
-        win_result = RED;
-        active_pieces = red_bitboard;
-    } else {
-        win_result = YELLOW;
-        active_pieces = yellow_bitboard;
-    }
+    const game_const win_result = turn_number % 2 == 0 ? YELLOW : RED;
+    const bitboard last_bitboard = entire_bitboard ^ current_bitboard;
 
     // determine whether the side has won.
     bitboard temp_bb;
 
-    temp_bb = active_pieces & (active_pieces << UP);
+    temp_bb = last_bitboard & (last_bitboard << UP);
     if (temp_bb & (temp_bb << 2 * UP))
         return win_result;
 
-    temp_bb = active_pieces & (active_pieces << UP_RIGHT);
+    temp_bb = last_bitboard & (last_bitboard << UP_RIGHT);
     if (temp_bb & (temp_bb << 2 * UP_RIGHT))
         return win_result;
 
-    temp_bb = active_pieces & (active_pieces << RIGHT);
+    temp_bb = last_bitboard & (last_bitboard << RIGHT);
     if (temp_bb & (temp_bb << 2 * RIGHT))
         return win_result;
 
-    temp_bb = active_pieces & (active_pieces << DOWN_RIGHT);
+    temp_bb = last_bitboard & (last_bitboard << DOWN_RIGHT);
     if (temp_bb & (temp_bb << 2 * DOWN_RIGHT))
         return win_result;
 
@@ -133,7 +126,7 @@ bitboard Board::get_legal_moves() {
      * implementation: finds the bitboard of all legal moves.
      */
 
-    bitboard all_pieces = EMPTY_BOARD | yellow_bitboard | red_bitboard;
+    bitboard all_pieces = entire_bitboard | EMPTY_BOARD;
     return (all_pieces << UP) & (~all_pieces);
 }
 
@@ -148,14 +141,8 @@ void Board::make_move(const bitboard &bb) {
      * increment the move number.
      */
 
-    if (side_to_move == YELLOW) {
-        yellow_bitboard ^= bb;
-        side_to_move = RED;
-    } else {
-        red_bitboard ^= bb;
-        side_to_move = YELLOW;
-    }
-
+    entire_bitboard ^= bb;
+    current_bitboard ^= entire_bitboard ^ bb;
     turn_number++;
 }
 
@@ -169,15 +156,9 @@ void Board::undo_move(const bitboard &bb) {
      * last move from the proper piece bitboard.
      */
 
+    entire_bitboard ^= bb;
+    current_bitboard ^= entire_bitboard;
     turn_number--;
-
-    if (side_to_move == YELLOW) {
-        red_bitboard ^= bb;
-        side_to_move = RED;
-    } else {
-        yellow_bitboard ^= bb;
-        side_to_move = YELLOW;
-    }
 }
 
 void Board::display() {
@@ -195,6 +176,8 @@ void Board::display() {
         if (s % 7 == 0)
             continue;
 
+        const bitboard yellow_bitboard = turn_number % 2 == 0 ? current_bitboard : entire_bitboard ^ current_bitboard;
+        const bitboard red_bitboard = turn_number % 2 == 1 ? current_bitboard : entire_bitboard ^ current_bitboard;
         if (yellow_bitboard & ((bitboard) 1 << s)) {
             rows_representation[6 - (s % 7)][s / 7] = YELLOW;
         } else if (red_bitboard & ((bitboard) 1 << s)) {
